@@ -1,55 +1,64 @@
-* {
-  margin: 0;
-  padding: 0;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
+<template>
+  <div class="wrapper">
+    <div class="container-enter">
+      <div class="modal__block">
+        <form class="modal__form-login" action="#">
+          <a href="../">
+            <div class="modal__logo">
+              <img src="@/assets/imgs/logo_modal.png" alt="logo" />
+            </div>
+          </a>
+          <input class="modal__input login" type="text" name="login" placeholder="Почта" />
+          <input
+            class="modal__input password"
+            type="password"
+            name="password"
+            placeholder="Пароль"
+          />
+          <input
+            class="modal__input password-double"
+            type="password"
+            name="password"
+            placeholder="Повторите пароль"
+            v-if="isReg"
+          />
+          <button class="modal__btn-enter" v-if="!isReg">
+            <RouterLink to="/">Войти</RouterLink>
+          </button>
+          <button class="modal__btn-signup" v-if="!isReg" @click="isReg = true">
+            Зарегистрироваться
+          </button>
+          <button class="modal__btn-enter" v-if="isReg" @click="isReg = false">
+            <RouterLink to="/">Зарегистрироваться</RouterLink>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+<script setup>
+import { ref } from 'vue'
 
-*:before,
-*:after {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-a,
-a:visited {
-  text-decoration: none;
-  font-family: "StratosSkyeng", sans-serif;
-  cursor: pointer;
-}
-
-button,
-._btn {
-  cursor: pointer;
-}
-
-ul li {
-  list-style: none;
-}
-
-@font-face {
-  font-family: "StratosSkyeng";
-  src: local("StratosSkyeng"), local("StratosSkyeng"),
-    url("../fonts/StratosSkyeng.woff2") format("woff2"),
-    url("../fonts/StratosSkyeng.woff") format("woff"),
-    url("../fonts/StratosSkyeng.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-}
-
-html,
-body {
-  width: 100%;
-  height: 100%;
-  font-family: "StratosSkyeng", sans-serif;
-}
-
+const isReg = ref(false)
+</script>
+<style scoped>
 .wrapper {
   width: 100%;
   min-height: 100%;
   overflow: hidden;
+  font-family: 'StratosSkyeng';
 }
-
+@font-face {
+  font-family: 'StratosSkyeng';
+  src:
+    local('StratosSkyeng'),
+    local('StratosSkyeng'),
+    url('@/assets/fonts/StratosSkyeng.woff2') format('woff2'),
+    url('@/assets/fonts/StratosSkyeng.woff') format('woff'),
+    url('@/assets/fonts/StratosSkyeng.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
 .container-enter {
   max-width: 100%;
   height: 100vh;
@@ -246,3 +255,7 @@ body {
 .login {
   margin-bottom: 30px;
 }
+.password-double {
+  margin-top: 30px;
+}
+</style>
