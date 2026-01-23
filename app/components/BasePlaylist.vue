@@ -22,7 +22,6 @@
   </div>
 </template>
 <script setup>
-import BaseTrack from './BaseTrack.vue'
 import { tracks } from '@/mocks/tracks'
 </script>
 <style scoped>
