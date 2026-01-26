@@ -6,9 +6,9 @@
         <div class="main__centerblock centerblock">
           <div class="centerblock__search search">
             <svg class="search__svg">
-              <use xlink:href="@/assets/icons/sprite.svg#icon-search"></use>
+              <use xlink:href="@/assets/icons/sprite.svg#icon-search" />
             </svg>
-            <input class="search__text" type="search" placeholder="Поиск" name="search" />
+            <input class="search__text" type="search" placeholder="Поиск" name="search" >
           </div>
           <h2 class="centerblock__h2">Треки</h2>
           <FilterControls />
@@ -17,16 +17,10 @@
         <SideBar />
       </main>
       <PlayerBar />
-      <footer class="footer"></footer>
     </div>
   </div>
 </template>
 <script setup>
-import BaseNavbar from '@/components/BaseNavbar.vue'
-import BasePlaylist from '@/components/BasePlaylist.vue'
-import FilterControls from '@/components/FilterControls.vue'
-import PlayerBar from '@/components/PlayerBar.vue'
-import SideBar from '@/components/SideBar.vue'
 </script>
 <style scoped>
 .wrapper {
