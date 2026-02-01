@@ -6,23 +6,31 @@
       <div class="playlist-title__col col03">Альбом</div>
       <div class="playlist-title__col col04">
         <svg class="playlist-title__svg">
-          <use xlink:href="@/assets/icons/sprite.svg#icon-watch"></use>
+          <use xlink:href="@/assets/icons/sprite.svg#icon-watch" />
         </svg>
       </div>
     </div>
-    <div class="content__playlist playlist" v-for="track in tracks" :key="track.title">
+    <div class="content__playlist playlist">
       <BaseTrack
-        :title="track.title"
+        v-for="track in tracks"
+        :key="track._id"
+        :title="track.name"
         :author="track.author"
         :album="track.album"
-        :duration="track.duration"
-        :span="track.span"
+        :duration="track.duration_in_seconds"
       />
     </div>
   </div>
 </template>
 <script setup>
-import { tracks } from '@/mocks/tracks'
+const props = defineProps({
+  tracks: {
+    type: Object,
+    required: true,
+  },
+})
+
+console.log(props.tracks)
 </script>
 <style scoped>
 .content__title {
@@ -59,6 +67,8 @@ import { tracks } from '@/mocks/tracks'
   -ms-flex-direction: column;
   flex-direction: column;
   overflow-y: auto;
+  height: 673px;
+  padding-bottom: 200px;
 }
 
 .playlist-title__col {

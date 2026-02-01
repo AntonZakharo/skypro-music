@@ -8,9 +8,7 @@
           </svg>
         </div>
         <div class="track__title-text">
-          <a class="track__title-link" href="http://"
-            >{{ title }} <span class="track__title-span">{{ span }}</span></a
-          >
+          <a class="track__title-link" href="http://">{{ title }}</a>
         </div>
       </div>
       <div class="track__author">
@@ -23,7 +21,7 @@
         <svg class="track__time-svg">
           <use xlink:href="@/assets/icons/sprite.svg#icon-like"></use>
         </svg>
-        <span class="track__time-text">{{ duration }}</span>
+        <span class="track__time-text">{{ formatDuration(duration) }}</span>
       </div>
     </div>
   </div>
@@ -33,9 +31,10 @@ defineProps({
   title: String,
   author: String,
   album: String,
-  duration: String,
-  span: String,
+  duration: Number,
 })
+// eslint-disable-next-line no-undef
+const { formatDuration } = useTracks()
 </script>
 <style scoped>
 .playlist__item {

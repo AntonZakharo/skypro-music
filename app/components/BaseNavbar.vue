@@ -3,12 +3,12 @@
     <div class="nav__logo logo">
       <img class="logo__image" src="@/assets/imgs/logo.png" />
     </div>
-    <div class="nav__burger burger">
+    <div class="nav__burger burger" @click="showMenu">
       <span class="burger__line"></span>
       <span class="burger__line"></span>
       <span class="burger__line"></span>
     </div>
-    <div class="nav__menu menu">
+    <div v-show="isShow" class="nav__menu menu">
       <ul class="menu__list">
         <li class="menu__item">
           <RouterLink to="/" class="menu__link">Главное</RouterLink>
@@ -23,7 +23,12 @@
     </div>
   </nav>
 </template>
-<script setup></script>
+<script setup>
+const isShow = ref(false)
+function showMenu() {
+  isShow.value = isShow.value ? false : true
+}
+</script>
 <style scoped>
 .main__nav {
   width: 244px;
@@ -57,6 +62,7 @@
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .nav__menu {
@@ -71,6 +77,16 @@
 }
 .menu__list {
   padding: 18px 0 10px 0;
+  position: relative;
+  animation: openMenu 0.3s ease;
+}
+@keyframes openMenu {
+  from {
+    left: -100px;
+  }
+  to {
+    left: 0px;
+  }
 }
 
 .menu__item {
