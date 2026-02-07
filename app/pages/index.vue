@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="wrapper">
     <div class="container">
@@ -8,11 +9,13 @@
             <svg class="search__svg">
               <use xlink:href="@/assets/icons/sprite.svg#icon-search" />
             </svg>
-            <input class="search__text" type="search" placeholder="Поиск" name="search" >
+            <input class="search__text" type="search" placeholder="Поиск" name="search" />
           </div>
           <h2 class="centerblock__h2">Треки</h2>
-          <FilterControls />
-          <BasePlaylist />
+          <FilterControls :tracks="tracks" />
+          <BasePlaylist v-if="!loading" :tracks="tracks" />
+          <div v-if="error" class="error">{{ error }}</div>
+          <div v-if="loading" class="loading">Загрузка треков...</div>
         </div>
         <SideBar />
       </main>
@@ -21,8 +24,11 @@
   </div>
 </template>
 <script setup>
+// eslint-disable-next-line no-undef
+const { tracks, loading, error, fetchTracks } = useTracks()
+fetchTracks()
 </script>
-<style scoped>
+<style scoped lang="scss">
 .wrapper {
   width: 100%;
   min-height: 100%;
@@ -141,5 +147,13 @@
   line-height: 72px;
   letter-spacing: -0.8px;
   margin-bottom: 45px;
+}
+.error {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.loading {
+  @extend .error;
 }
 </style>
