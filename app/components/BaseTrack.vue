@@ -1,7 +1,7 @@
 <template>
   <div class="playlist__item">
     <div class="playlist__track track">
-      <div class="track__title">
+      <div class="track__title" @click="playTrack(props.track)">
         <div class="track__title-image">
           <svg class="track__title-svg">
             <use xlink:href="@/assets/icons/sprite.svg#icon-note"></use>
@@ -27,14 +27,20 @@
   </div>
 </template>
 <script setup>
-defineProps({
+const props = defineProps({
   title: String,
   author: String,
   album: String,
   duration: Number,
+  track: Object,
 })
+import { usePlayerStore } from '~/stores/usePlayerStore'
+import { useAudioPlayer } from '~/composables/useAudioPlayer'
+
+const playerStore = usePlayerStore()
 // eslint-disable-next-line no-undef
 const { formatDuration } = useTracks()
+const { playTrack } = useAudioPlayer()
 </script>
 <style scoped>
 .playlist__item {
