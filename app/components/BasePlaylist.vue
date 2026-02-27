@@ -18,6 +18,7 @@
         :author="track.author"
         :album="track.album"
         :duration="track.duration_in_seconds"
+        :track="track"
       />
     </div>
   </div>
