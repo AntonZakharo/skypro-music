@@ -8,28 +8,42 @@
               <img src="@/assets/imgs/logo_modal.png" alt="logo" />
             </div>
           </a>
-          <input class="modal__input login" type="text" name="login" placeholder="Почта" />
+          <input
+            class="modal__input login"
+            type="text"
+            name="login"
+            placeholder="Почта"
+            v-model="email"
+          />
           <input
             class="modal__input password"
             type="password"
             name="password"
             placeholder="Пароль"
+            v-model="password"
           />
           <input
             class="modal__input password-double"
             type="password"
             name="password"
             placeholder="Повторите пароль"
+            v-model="password2"
             v-if="isReg"
           />
-          <button class="modal__btn-enter" v-if="!isReg">
-            <RouterLink to="/">Войти</RouterLink>
+          <div class="loading" v-if="loading">Загрузка...</div>
+          <button
+            class="modal__btn-enter"
+            :style="{ marginTop: loading ? '20px' : '60px' }"
+            v-if="!isReg"
+            @click.prevent="log"
+          >
+            Войти
           </button>
-          <button class="modal__btn-signup" v-if="!isReg" @click="isReg = true">
+          <button class="modal__btn-signup" v-if="!isReg" @click.prevent="isReg = true">
             Зарегистрироваться
           </button>
-          <button class="modal__btn-enter" v-if="isReg" @click="isReg = false">
-            <RouterLink to="/">Зарегистрироваться</RouterLink>
+          <button class="modal__btn-enter" v-if="isReg" @click.prevent="reg">
+            Зарегистрироваться
           </button>
         </form>
       </div>
@@ -38,27 +52,61 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+useHead({
+  title: 'Вход | Skypro.Music',
+})
 
 const isReg = ref(false)
+const email = ref('')
+const password = ref('')
+const password2 = ref('')
+const error = ref('')
+const response = ref('')
+const loading = ref(false)
+
+const router = useRouter()
+
+async function log() {
+  try {
+    if (email.value && password.value) {
+      loading.value = true
+      await login(email.value, password.value)
+      const response = await getToken(email.value, password.value)
+      localStorage.setItem('access', response.access)
+      localStorage.setItem('refresh', response.refresh)
+      loading.value = false
+      router.push('/')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+async function reg() {
+  if (email.value && password.value) {
+    if (password.value == password2.value) {
+      try {
+        response.value = await register(email.value, password.value, email.value)
+        if (response.value.success) {
+          isReg.value = false
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      error.value = 'Пароли различаются'
+    }
+  } else {
+    error.value = 'Не все поля заполнены'
+  }
+}
 </script>
 <style scoped>
 .wrapper {
   width: 100%;
   min-height: 100%;
   overflow: hidden;
-  font-family: 'StratosSkyeng';
 }
-@font-face {
-  font-family: 'StratosSkyeng';
-  src:
-    local('StratosSkyeng'),
-    local('StratosSkyeng'),
-    url('@/assets/fonts/StratosSkyeng.woff2') format('woff2'),
-    url('@/assets/fonts/StratosSkyeng.woff') format('woff'),
-    url('@/assets/fonts/StratosSkyeng.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
+
 .container-enter {
   max-width: 100%;
   height: 100vh;
@@ -132,6 +180,7 @@ const isReg = ref(false)
   border-right: none;
   border-bottom: 1px solid #d0cece;
   padding: 8px 1px;
+  outline: none;
 }
 
 .modal__input::-webkit-input-placeholder {
@@ -177,6 +226,12 @@ const isReg = ref(false)
   border-radius: 6px;
   margin-top: 60px;
   margin-bottom: 20px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.05px;
+  color: white;
   border: none;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -255,7 +310,50 @@ const isReg = ref(false)
 .login {
   margin-bottom: 30px;
 }
+.loading {
+  color: black;
+  margin-top: 20px;
+}
 .password-double {
   margin-top: 30px;
+}
+.success {
+  width: 500px;
+  height: 100px;
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  border-radius: 15px;
+  animation: goDown 0.7s ease;
+  background-color: rgb(10, 109, 10);
+  color: white;
+  transform: translate(-50%, 0);
+  font-family: 'StratosSkyeng';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 30px;
+  letter-spacing: -0.05px;
+  padding: 15px 0;
+  text-align: center;
+}
+.success-box {
+  position: relative;
+}
+.success__img {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+@keyframes goDown {
+  from {
+    top: -100px;
+  }
+  to {
+    top: 75px;
+  }
 }
 </style>

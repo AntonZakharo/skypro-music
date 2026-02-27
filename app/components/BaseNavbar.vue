@@ -1,8 +1,10 @@
 <template>
   <nav class="main__nav nav">
-    <div class="nav__logo logo">
-      <img class="logo__image" src="@/assets/imgs/logo.png" />
-    </div>
+    <RouterLink to="/">
+      <div class="nav__logo logo">
+        <img class="logo__image" src="@/assets/imgs/logo.png" />
+      </div>
+    </RouterLink>
     <div class="nav__burger burger" @click="showMenu">
       <span class="burger__line"></span>
       <span class="burger__line"></span>
@@ -14,9 +16,9 @@
           <RouterLink to="/" class="menu__link">Главное</RouterLink>
         </li>
         <li class="menu__item">
-          <RouterLink to="/" class="menu__link">Мой плейлист</RouterLink>
+          <RouterLink to="/favorites" class="menu__link">Мой плейлист</RouterLink>
         </li>
-        <li class="menu__item">
+        <li class="menu__item" v-if="refresh">
           <RouterLink to="/auth" class="menu__link">Войти</RouterLink>
         </li>
       </ul>
@@ -28,6 +30,9 @@ const isShow = ref(false)
 function showMenu() {
   isShow.value = isShow.value ? false : true
 }
+onMounted(() => {
+  const refresh = localStorage.getItem('refresh')
+})
 </script>
 <style scoped>
 .main__nav {

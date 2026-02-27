@@ -3,7 +3,7 @@
     <div class="sidebar__personal">
       <p class="sidebar__personal-name">Sergey.Ivanov</p>
       <div class="sidebar__icon">
-        <RouterLink to="/auth">
+        <RouterLink to="/auth" @click="logout">
           <svg>
             <use xlink:href="@/assets/icons/sprite.svg#logout"></use>
           </svg>
@@ -13,24 +13,32 @@
     <div class="sidebar__block">
       <div class="sidebar__list">
         <div class="sidebar__item">
-          <a class="sidebar__link" href="#">
+          <RouterLink to="/category/2" class="sidebar__link">
             <img class="sidebar__img" src="@/assets/imgs/playlist01.png" alt="day's playlist" />
-          </a>
+          </RouterLink>
         </div>
         <div class="sidebar__item">
-          <a class="sidebar__link" href="#">
+          <RouterLink to="/category/3" class="sidebar__link">
             <img class="sidebar__img" src="@/assets/imgs/playlist02.png" alt="day's playlist" />
-          </a>
+          </RouterLink>
         </div>
         <div class="sidebar__item">
-          <a class="sidebar__link" href="#">
+          <RouterLink to="/category/4" class="sidebar__link">
             <img class="sidebar__img" src="@/assets/imgs/playlist03.png" alt="day's playlist" />
-          </a>
+          </RouterLink>
         </div>
       </div>
     </div>
   </div>
 </template>
+<script setup>
+function logout() {
+  localStorage.removeItem('refresh')
+  const intervalId = localStorage.getItem('intervalId')
+  clearInterval(intervalId)
+}
+</script>
+
 <style scoped>
 .main__sidebar {
   max-width: 418px;

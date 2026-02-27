@@ -1,5 +1,5 @@
 <template>
-  <div class="centerblock__content playlist-content">
+  <div class="centerblock__content playlist-content" v-if="!loading">
     <div class="content__title playlist-title">
       <div class="playlist-title__col col01">Трек</div>
       <div class="playlist-title__col col02">Исполнитель</div>
@@ -18,10 +18,12 @@
         :author="track.author"
         :album="track.album"
         :duration="track.duration_in_seconds"
+        :isLiked="track.isLiked"
         :track="track"
       />
     </div>
   </div>
+  <div v-if="loading" class="loading">Загрузка треков...</div>
 </template>
 <script setup>
 const props = defineProps({
@@ -31,7 +33,21 @@ const props = defineProps({
   },
 })
 
-console.log(props.tracks)
+const { loading, categoryTrackList, fetchFavoriteTracks } = useTracks()
+
+onMounted(async () => {
+  if (localStorage.getItem('refresh'))
+    await fetchFavoriteTracks(localStorage.getItem('access')).then(() => {
+      props.tracks.forEach((track) => {
+        track.isLiked = false
+        categoryTrackList.value.forEach((categoryTrack) => {
+          if (track._id == categoryTrack._id) {
+            track.isLiked = true
+          }
+        })
+      })
+    })
+})
 </script>
 <style scoped>
 .content__title {
@@ -70,6 +86,10 @@ console.log(props.tracks)
   overflow-y: auto;
   height: 673px;
   padding-bottom: 200px;
+  scrollbar-width: none;
+}
+.content__playlist::-webkit-scrollbar {
+  width: 0px;
 }
 
 .playlist-title__col {
@@ -104,5 +124,10 @@ console.log(props.tracks)
 .col04 {
   width: 60px;
   text-align: end;
+}
+.loading {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 </style>

@@ -15,18 +15,21 @@ export function useAudioPlayer() {
 
   // Воспроизводим трек
   const playTrack = async (track) => {
-    if (!playerStore.audioRef) {
-      console.error('Плеер не инициализирован')
-      return
-    }
+    if (!playerStore.audioRef) return
 
     try {
-      playerStore.setCurrentTrack(track)
+      playerStore.audioRef.pause()
       playerStore.audioRef.src = track.track_file
+      playerStore.audioRef.load()
+
       await playerStore.audioRef.play()
+
+      playerStore.setCurrentTrack(track)
       playerStore.setPlaying(true)
     } catch (error) {
-      console.error('Ошибка воспроизведения:', error)
+      if (error.name !== 'AbortError') {
+        console.error('Ошибка воспроизведения:', error)
+      }
       playerStore.setPlaying(false)
     }
   }

@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <NuxtLayout name="default">
     <div class="centerblock__search search">
@@ -7,17 +6,23 @@
       </svg>
       <input class="search__text" type="search" placeholder="Поиск" name="search" />
     </div>
-    <h2 class="centerblock__h2">Треки</h2>
-    <FilterControls :tracks="tracks" />
-    <BasePlaylist v-if="!loading" :tracks="tracks" />
+    <h2 class="centerblock__h2">{{ categoryName }}</h2>
+    <FilterControls :tracks="categoryTrackList" />
+    <BasePlaylist v-if="!loading" :tracks="categoryTrackList" />
     <div v-if="error" class="error">{{ error }}</div>
     <div v-if="loading" class="loading">Загрузка треков...</div>
   </NuxtLayout>
 </template>
 <script setup>
-// eslint-disable-next-line no-undef
-const { tracks, loading, error, fetchAllTracks } = useTracks()
-fetchAllTracks()
+const { loading, error, categoryName, categoryTrackList, fetchCategory } = useTracks()
+
+const route = useRoute()
+fetchCategory(route.params.id)
+watch(categoryName, (newName) => {
+  useHead({
+    title: `${newName || ''} | Skypro.Music`,
+  })
+})
 </script>
 <style scoped lang="scss">
 .centerblock__search {
