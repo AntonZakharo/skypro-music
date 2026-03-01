@@ -42,13 +42,19 @@
           <button class="modal__btn-signup" v-if="!isReg" @click.prevent="isReg = true">
             Зарегистрироваться
           </button>
-          <button class="modal__btn-enter" v-if="isReg" @click.prevent="reg">
+          <button
+            class="modal__btn-enter"
+            v-if="isReg"
+            :style="{ marginTop: loading ? '20px' : '60px' }"
+            @click.prevent="reg"
+          >
             Зарегистрироваться
           </button>
         </form>
       </div>
     </div>
   </div>
+  <Notification :message="error.message" :show="error.isError" :type="error.type" />
 </template>
 <script setup>
 import { ref } from 'vue'
@@ -60,7 +66,7 @@ const isReg = ref(false)
 const email = ref('')
 const password = ref('')
 const password2 = ref('')
-const error = ref('')
+const error = ref({})
 const response = ref('')
 const loading = ref(false)
 
@@ -71,32 +77,51 @@ async function log() {
     if (email.value && password.value) {
       loading.value = true
       await login(email.value, password.value)
-      const response = await getToken(email.value, password.value)
-      localStorage.setItem('access', response.access)
-      localStorage.setItem('refresh', response.refresh)
+      response.value = await getToken(email.value, password.value)
+      localStorage.setItem('access', response.value.access)
+      localStorage.setItem('refresh', response.value.refresh)
+      localStorage.setItem('email', email.value)
       loading.value = false
       router.push('/')
+    } else {
+      error.value.message = 'Поля не заполнены'
+      error.value.type = 'info'
+      error.value.isError = true
+      loading.value = false
     }
-  } catch (error) {
-    console.error(error)
+  } catch (err) {
+    error.value.message = String(err).slice(6, -1)
+    error.value.type = 'error'
+    error.value.isError = true
+    loading.value = false
   }
 }
 async function reg() {
-  if (email.value && password.value) {
+  if (email.value && password.value && password2.value) {
     if (password.value == password2.value) {
       try {
+        loading.value = true
         response.value = await register(email.value, password.value, email.value)
         if (response.value.success) {
           isReg.value = false
         }
-      } catch (error) {
-        console.log(error)
+      } catch (err) {
+        error.value.message = String(err).slice(6, -1)
+        error.value.type = 'error'
+        error.value.isError = true
+        loading.value = false
       }
     } else {
-      error.value = 'Пароли различаются'
+      error.value.message = 'Пароли различаются'
+      error.value.type = 'error'
+      error.value.isError = true
+      loading.value = false
     }
   } else {
-    error.value = 'Не все поля заполнены'
+    error.value.message = 'Поля не заполнены'
+    error.value.type = 'error'
+    error.value.isError = true
+    loading.value = false
   }
 }
 </script>

@@ -15,21 +15,18 @@ export function useAudioPlayer() {
 
   // Воспроизводим трек
   const playTrack = async (track) => {
-    if (!playerStore.audioRef) return
+    if (!playerStore.audioRef) {
+      console.error('Плеер не инициализирован')
+      return
+    }
 
     try {
-      playerStore.audioRef.pause()
-      playerStore.audioRef.src = track.track_file
-      playerStore.audioRef.load()
-
-      await playerStore.audioRef.play()
-
       playerStore.setCurrentTrack(track)
+      playerStore.audioRef.src = track.track_file
+      await playerStore.audioRef.play()
       playerStore.setPlaying(true)
     } catch (error) {
-      if (error.name !== 'AbortError') {
-        console.error('Ошибка воспроизведения:', error)
-      }
+      console.error('Ошибка воспроизведения:', error)
       playerStore.setPlaying(false)
     }
   }
@@ -57,6 +54,11 @@ export function useAudioPlayer() {
     if (!playerStore.audioRef) return
     playerStore.audioRef.volume = playerStore.volume / 100
   }
+  watchEffect(() => {
+    if (playerStore.progress >= 100 && playerStore.isPlaying) {
+      playerStore.setPlaying(false)
+    }
+  })
 
   return {
     initPlayer,

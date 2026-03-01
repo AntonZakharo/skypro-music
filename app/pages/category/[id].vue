@@ -7,7 +7,7 @@
       <input class="search__text" type="search" placeholder="Поиск" name="search" />
     </div>
     <h2 class="centerblock__h2">{{ categoryName }}</h2>
-    <FilterControls :tracks="categoryTrackList" />
+    <FilterControls :tracks="categoryTrackList" :loading="loading" />
     <BasePlaylist v-if="!loading" :tracks="categoryTrackList" />
     <div v-if="error" class="error">{{ error }}</div>
     <div v-if="loading" class="loading">Загрузка треков...</div>

@@ -18,7 +18,7 @@
         <li class="menu__item">
           <RouterLink to="/favorites" class="menu__link">Мой плейлист</RouterLink>
         </li>
-        <li class="menu__item" v-if="refresh">
+        <li class="menu__item" v-if="!refresh">
           <RouterLink to="/auth" class="menu__link">Войти</RouterLink>
         </li>
       </ul>
@@ -30,8 +30,9 @@ const isShow = ref(false)
 function showMenu() {
   isShow.value = isShow.value ? false : true
 }
+const refresh = ref()
 onMounted(() => {
-  const refresh = localStorage.getItem('refresh')
+  refresh.value = localStorage.getItem('refresh')
 })
 </script>
 <style scoped>

@@ -12,7 +12,7 @@
     </div>
     <div class="content__playlist playlist">
       <BaseTrack
-        v-for="track in tracks"
+        v-for="track in filteredTracks"
         :key="track._id"
         :title="track.name"
         :author="track.author"
@@ -34,7 +34,25 @@ const props = defineProps({
 })
 
 const { loading, categoryTrackList, fetchFavoriteTracks } = useTracks()
+const filtersStore = useFiltersStore()
 
+const filteredTracks = computed(() => {
+  return props.tracks.filter(({ author, genre, release_date }) => {
+    const trackYear = Number(release_date.slice(0, 4))
+
+    const authorMatch =
+      filtersStore.currentAuthors.length === 0 || filtersStore.currentAuthors.includes(author)
+
+    const genreMatch =
+      filtersStore.currentGenres.length === 0 ||
+      genre.some((g) => filtersStore.currentGenres.includes(g))
+
+    const yearMatch =
+      filtersStore.currentYears.length === 0 || filtersStore.currentYears.includes(trackYear)
+
+    return authorMatch && genreMatch && yearMatch
+  })
+})
 onMounted(async () => {
   if (localStorage.getItem('refresh'))
     await fetchFavoriteTracks(localStorage.getItem('access')).then(() => {

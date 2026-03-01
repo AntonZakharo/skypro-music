@@ -1,31 +1,30 @@
 <template>
   <div class="main__sidebar sidebar">
     <div class="sidebar__personal">
-      <p class="sidebar__personal-name">Sergey.Ivanov</p>
-      <div class="sidebar__icon">
-        <RouterLink to="/auth" @click="logout">
+      <div class="sidebar__icon" v-if="refresh">
+        <NuxtLink to="/auth" @click="logout">
           <svg>
             <use xlink:href="@/assets/icons/sprite.svg#logout"></use>
           </svg>
-        </RouterLink>
+        </NuxtLink>
       </div>
     </div>
     <div class="sidebar__block">
       <div class="sidebar__list">
         <div class="sidebar__item">
-          <RouterLink to="/category/2" class="sidebar__link">
+          <NuxtLink to="/category/2" class="sidebar__link">
             <img class="sidebar__img" src="@/assets/imgs/playlist01.png" alt="day's playlist" />
-          </RouterLink>
+          </NuxtLink>
         </div>
         <div class="sidebar__item">
-          <RouterLink to="/category/3" class="sidebar__link">
+          <NuxtLink to="/category/3" class="sidebar__link">
             <img class="sidebar__img" src="@/assets/imgs/playlist02.png" alt="day's playlist" />
-          </RouterLink>
+          </NuxtLink>
         </div>
         <div class="sidebar__item">
-          <RouterLink to="/category/4" class="sidebar__link">
+          <NuxtLink to="/category/4" class="sidebar__link">
             <img class="sidebar__img" src="@/assets/imgs/playlist03.png" alt="day's playlist" />
-          </RouterLink>
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -37,6 +36,10 @@ function logout() {
   const intervalId = localStorage.getItem('intervalId')
   clearInterval(intervalId)
 }
+const refresh = ref()
+onMounted(() => {
+  refresh.value = localStorage.getItem('refresh')
+})
 </script>
 
 <style scoped>

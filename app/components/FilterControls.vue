@@ -1,8 +1,19 @@
 <template>
   <div class="centerblock__filter filter">
     <div class="filter__title">Искать по:</div>
-    <div class="filter__item">
-      <div class="filter__button button-author _btn-text" @click="showPopUp('authors')">
+    <div
+      class="filter__item"
+      :style="{
+        pointerEvents: loading ? 'none' : 'all',
+      }"
+    >
+      <div
+        class="filter__button button-author _btn-text"
+        :class="{
+          filter__button_active: filtersStore.currentAuthors.length !== 0,
+        }"
+        @click="showPopUp('authors')"
+      >
         исполнителю
       </div>
       <div v-if="currentPopUp == 'authors'" class="filter__list">
@@ -10,10 +21,10 @@
           <div
             v-for="author in authorList"
             :key="author"
-            @click="choose(currentAuthors, author)"
+            @click="filtersStore.setAuthor(author)"
             class="filter__list-item"
             :class="{
-              _chosen: currentAuthors.includes(author),
+              _chosen: filtersStore.currentAuthors.includes(author),
             }"
           >
             {{ author }}
@@ -21,8 +32,19 @@
         </div>
       </div>
     </div>
-    <div class="filter__item">
-      <div class="filter__button button-year _btn-text" @click="showPopUp('year')">
+    <div
+      class="filter__item"
+      :style="{
+        pointerEvents: loading ? 'none' : 'all',
+      }"
+    >
+      <div
+        class="filter__button button-year _btn-text"
+        :class="{
+          filter__button_active: filtersStore.currentYears.length !== 0,
+        }"
+        @click="showPopUp('year')"
+      >
         году выпуска
       </div>
       <div v-if="currentPopUp == 'year'" class="filter__list">
@@ -30,10 +52,10 @@
           <div
             v-for="year in yearList"
             :key="year"
-            @click="choose(currentYears, year)"
+            @click="filtersStore.setYear(year)"
             class="filter__list-item"
             :class="{
-              _chosen: currentYears.includes(year),
+              _chosen: filtersStore.currentYears.includes(year),
             }"
           >
             {{ year }}
@@ -41,17 +63,30 @@
         </div>
       </div>
     </div>
-    <div class="filter__item">
-      <div class="filter__button button-genre _btn-text" @click="showPopUp('genre')">жанру</div>
+    <div
+      class="filter__item"
+      :style="{
+        pointerEvents: loading ? 'none' : 'all',
+      }"
+    >
+      <div
+        class="filter__button button-genre _btn-text"
+        :class="{
+          filter__button_active: filtersStore.currentGenres.length !== 0,
+        }"
+        @click="showPopUp('genre')"
+      >
+        жанру
+      </div>
       <div v-if="currentPopUp == 'genre'" class="filter__list">
         <div class="filter__list-items">
           <div
             v-for="genre in genreList"
             :key="genre"
-            @click="choose(currentGenres, genre)"
+            @click="filtersStore.setGenre(genre)"
             class="filter__list-item"
             :class="{
-              _chosen: currentGenres.includes(genre),
+              _chosen: filtersStore.currentGenres.includes(genre),
             }"
           >
             {{ genre }}
@@ -67,20 +102,18 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  loading: {
+    type: Boolean,
+    required: true,
+  },
 })
 const currentPopUp = ref('')
-const currentAuthors = ref([])
-const currentYears = ref([])
-const currentGenres = ref([])
+const filtersStore = useFiltersStore()
+filtersStore.currentAuthors = []
+filtersStore.currentGenres = []
+filtersStore.currentYears = []
 const showPopUp = (popup) => {
   currentPopUp.value = popup == currentPopUp.value ? '' : popup
-}
-const choose = (array, value) => {
-  if (!array.includes(value)) {
-    array.push(value)
-  } else {
-    array.splice(array.indexOf(value), 1)
-  }
 }
 
 // eslint-disable-next-line no-undef
@@ -187,6 +220,11 @@ const genreList = computed(() => {
   border: 1px solid #ffffff;
   border-radius: 60px;
   padding: 6px 20px;
+  transition: 0.3s;
+}
+.filter__button_active {
+  border: 1px solid #9a48f1;
+  color: #b672ff;
 }
 .filter__list {
   position: absolute;

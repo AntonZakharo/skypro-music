@@ -17,6 +17,7 @@ export const useTracks = () => {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
+          'content-type': 'application/json',
         },
       })
       if (!response.ok) {
