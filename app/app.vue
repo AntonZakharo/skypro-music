@@ -1,5 +1,6 @@
 <template>
   <NuxtPage />
+  <PlayerBar />
 </template>
 <script setup>
 onMounted(() => {

@@ -8,7 +8,6 @@
         </div>
         <SideBar />
       </div>
-      <PlayerBar />
     </div>
   </div>
 </template>

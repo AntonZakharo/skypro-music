@@ -91,8 +91,8 @@ import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAudioPlayer } from '~/composables/useAudioPlayer'
 const playerStore = usePlayerStore()
 
-// eslint-disable-next-line no-undef
 const audioRef = ref(null)
+
 const { playTrack, handleTimeUpdate, seekTo, updateVolume, initPlayer } = useAudioPlayer()
 
 const handlePlay = () => {
@@ -128,7 +128,6 @@ const continueTrack = () => {
   playerStore.setPlaying(true)
   playerStore.audioRef.play()
 }
-// eslint-disable-next-line no-undef
 onMounted(() => {
   initPlayer(audioRef.value)
 })
