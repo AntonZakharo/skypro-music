@@ -17,7 +17,10 @@
 <script setup>
 // eslint-disable-next-line no-undef
 const { tracks, loading, error, fetchAllTracks } = useTracks()
-fetchAllTracks()
+const playerStore = usePlayerStore()
+fetchAllTracks().then((tracks) => {
+  playerStore.setPlaylist(tracks)
+})
 </script>
 <style scoped lang="scss">
 .centerblock__search {

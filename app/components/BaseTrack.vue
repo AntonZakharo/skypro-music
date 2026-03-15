@@ -46,12 +46,12 @@ const playerStore = usePlayerStore()
 const { formatDuration } = useTracks()
 const { playTrack } = useAudioPlayer()
 
-async function likeTrack() {
-  const response = await like(props.track._id)
+function likeTrack() {
+  like(props.track._id)
   props.track.isLiked = true
 }
-async function dislikeTrack() {
-  const response = await deleteLike(props.track._id)
+function dislikeTrack() {
+  deleteLike(props.track._id)
   props.track.isLiked = false
 }
 </script>

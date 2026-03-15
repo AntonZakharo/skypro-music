@@ -7,12 +7,12 @@
       <div class="bar__player-block">
         <div class="bar__player player">
           <div class="player__controls">
-            <div class="player__btn-prev">
+            <div class="player__btn-prev" @click="playerStore.prev()">
               <svg class="player__btn-prev-svg">
                 <use xlink:href="/assets/icons/sprite.svg#icon-prev"></use>
               </svg>
             </div>
-            <div class="player__btn-play _btn" @click="handlePlay">
+            <div class="player__btn-play" @click="handlePlay">
               <svg class="player__btn-play-svg">
                 <use
                   :xlink:href="
@@ -23,17 +23,31 @@
                 ></use>
               </svg>
             </div>
-            <div class="player__btn-next">
+            <div class="player__btn-next" @click="playerStore.next()">
               <svg class="player__btn-next-svg">
                 <use xlink:href="/assets/icons/sprite.svg#icon-next"></use>
               </svg>
             </div>
-            <div class="player__btn-repeat _btn-icon">
+            <div
+              class="player__btn-repeat _btn-icon"
+              :style="{
+                color: playerStore.repeat ? '#AD61FF' : '#696969',
+                stroke: playerStore.repeat ? '#AD61FF' : '#696969',
+              }"
+              @click="playerStore.toggleRepeat"
+            >
               <svg class="player__btn-repeat-svg">
                 <use xlink:href="/assets/icons/sprite.svg#icon-repeat"></use>
               </svg>
             </div>
-            <div class="player__btn-shuffle _btn-icon">
+            <div
+              class="player__btn-shuffle _btn-icon"
+              @click="playerStore.toggleShuffle()"
+              :style="{
+                color: playerStore.shuffle ? '#AD61FF' : '#696969',
+                stroke: playerStore.shuffle ? '#AD61FF' : '#696969',
+              }"
+            >
               <svg class="player__btn-shuffle-svg">
                 <use xlink:href="/assets/icons/sprite.svg#icon-shuffle"></use>
               </svg>
@@ -83,7 +97,7 @@
         </div>
       </div>
     </div>
-    <audio ref="audioRef" @timeupdate="handleTimeUpdate" />
+    <audio ref="audioRef" @timeupdate="handleTimeUpdate" @ended="playerStore.next(true)" />
   </div>
 </template>
 <script setup>
@@ -133,36 +147,27 @@ onMounted(() => {
 })
 </script>
 <style scoped>
-._btn-text:hover {
-  border-color: #d9b6ff;
-  color: #d9b6ff;
-  cursor: pointer;
-}
-
-._btn-icon:hover svg {
-  fill: transparent;
-  stroke: #acacac;
-  cursor: pointer;
-}
-
-._btn-text:active {
-  border-color: #ad61ff;
-  color: #ad61ff;
-  cursor: pointer;
-}
-
-._btn-icon:active svg {
-  fill: transparent;
-  stroke: #ffffff;
-  cursor: pointer;
-}
-
 ._btn-icon:active .track-play__like-svg,
 ._btn-icon:active .track-play__dislike-svg {
   fill: #696969;
   stroke: #ffffff;
   cursor: pointer;
 }
+
+._btn-icon {
+  color: #696969;
+  stroke: #696969;
+  cursor: pointer;
+}
+._btn-icon:hover svg {
+  color: #acacac;
+  stroke: #acacac;
+}
+._btn-icon:active svg {
+  color: #ffffff;
+  stroke: #ffffff;
+}
+
 .bar {
   position: absolute;
   bottom: 0;
@@ -256,6 +261,23 @@ onMounted(() => {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  cursor: pointer;
+}
+
+.player__btn-prev,
+.player__btn-play,
+.player__btn-next {
+  color: #d9d9d9;
+}
+.player__btn-prev:hover,
+.player__btn-play:hover,
+.player__btn-next:hover {
+  color: #696969;
+}
+.player__btn-prev:active,
+.player__btn-play:active,
+.player__btn-next:active {
+  color: #d9d9d9;
 }
 
 .player__btn-prev {
@@ -274,19 +296,15 @@ onMounted(() => {
 .player__btn-play-svg {
   width: 22px;
   height: 20px;
-  fill: #d9d9d9;
 }
 
 .player__btn-next {
   margin-right: 28px;
-  fill: #a53939;
 }
 
 .player__btn-next-svg {
   width: 15px;
   height: 14px;
-  fill: inherit;
-  stroke: #d9d9d9;
 }
 
 .player__btn-repeat {
@@ -296,8 +314,6 @@ onMounted(() => {
 .player__btn-repeat-svg {
   width: 18px;
   height: 12px;
-  fill: transparent;
-  stroke: #696969;
 }
 
 .player__btn-shuffle {
@@ -312,8 +328,6 @@ onMounted(() => {
 .player__btn-shuffle-svg {
   width: 19px;
   height: 12px;
-  fill: transparent;
-  stroke: #696969;
 }
 
 .player__track-play {

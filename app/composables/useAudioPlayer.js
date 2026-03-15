@@ -10,13 +10,18 @@ export function useAudioPlayer() {
     }
 
     playerStore.setAudioRef(element)
-    const localAudioInfo = JSON.parse(sessionStorage.getItem('audioInfo'))
-    if (localAudioInfo?.currentTrack) {
-      playerStore.setCurrentTrack(localAudioInfo.currentTrack)
-      playerStore.audioRef.src = localAudioInfo.currentTrack.track_file
-      playerStore.audioRef.currentTime = localAudioInfo.currentTime
+    try {
+      const localAudioInfo = JSON.parse(sessionStorage.getItem('audioInfo'))
+      if (localAudioInfo?.currentTrack) {
+        playerStore.setPlaylist(localAudioInfo.playlist)
+        playerStore.setCurrentTrack(localAudioInfo.currentTrack)
+        playerStore.audioRef.src = localAudioInfo.currentTrack.track_file
+        playerStore.audioRef.currentTime = localAudioInfo.currentTime
+        playerStore.setVolume(localAudioInfo.volume)
+      }
+    } catch (err) {
+      console.error(err)
     }
-    console.log(playerStore.audioRef)
   }
 
   // Воспроизводим трек
@@ -55,6 +60,9 @@ export function useAudioPlayer() {
         JSON.stringify({
           currentTrack: playerStore.currentTrack,
           currentTime: currentTime,
+          playlist: playerStore.playlist,
+          currentIndex: playerStore.currentIndex,
+          volume: playerStore.volume,
         }),
       )
     }
@@ -72,13 +80,6 @@ export function useAudioPlayer() {
     if (!playerStore.audioRef) return
     playerStore.audioRef.volume = playerStore.volume / 100
   }
-  watchEffect(() => {
-    if (playerStore.progress >= 100 && playerStore.isPlaying) {
-      playerStore.audioRef.currentTime = 0
-      playerStore.setProgress(0)
-      playerStore.setPlaying(false)
-    }
-  })
 
   return {
     initPlayer,

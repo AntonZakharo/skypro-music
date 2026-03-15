@@ -16,13 +16,16 @@
 </template>
 <script setup>
 const { loading, error, categoryTrackList, fetchFavoriteTracks } = useTracks()
+const playerStore = usePlayerStore()
 
 useHead({
   title: 'Мои треки | Skypro.Music',
 })
 onMounted(() => {
   const token = localStorage.getItem('access')
-  fetchFavoriteTracks(token)
+  fetchFavoriteTracks(token).then((tracks) => {
+    playerStore.setPlaylist(tracks)
+  })
 })
 </script>
 <style scoped lang="scss">
