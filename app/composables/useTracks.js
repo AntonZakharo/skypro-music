@@ -25,7 +25,8 @@ export const useTracks = () => {
       }
       const data = await response.json()
       tracks.value = data.data
-      return data
+
+      return data.data
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Ошибка при загрузке треков :('
     } finally {
@@ -34,11 +35,12 @@ export const useTracks = () => {
   }
 
   const fetchAllTracks = async () => {
-    await fetchTracks('/catalog/track/all/')
+    return await fetchTracks('/catalog/track/all/')
   }
   const fetchFavoriteTracks = async (token) => {
     await fetchTracks('/catalog/track/favorite/all/', token)
     categoryTrackList.value = tracks.value || []
+    return tracks.value
   }
   const fetchCategory = async (id) => {
     await fetchAllTracks()
@@ -52,6 +54,7 @@ export const useTracks = () => {
         categoryTrackList.value.push(track)
       }
     })
+    return tracks.value
   }
 
   const formatDuration = (seconds) => {

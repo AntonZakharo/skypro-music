@@ -17,7 +17,9 @@
 const { loading, error, categoryName, categoryTrackList, fetchCategory } = useTracks()
 
 const route = useRoute()
-fetchCategory(route.params.id)
+fetchCategory(route.params.id).then((tracks) => {
+  playerStore.setPlaylist(tracks)
+})
 watch(categoryName, (newName) => {
   useHead({
     title: `${newName || ''} | Skypro.Music`,
