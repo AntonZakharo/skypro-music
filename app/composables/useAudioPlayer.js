@@ -1,16 +1,22 @@
 import { usePlayerStore } from '~/stores/usePlayerStore'
 
 export function useAudioPlayer() {
-  // Получаем store, чтобы менять данные в хранилище
   const playerStore = usePlayerStore()
 
-  // Инициализируем плеер в самом начале
   const initPlayer = (element) => {
     if (!element) {
       console.error('Плеера нет :(')
       return
     }
+
     playerStore.setAudioRef(element)
+    const localAudioInfo = JSON.parse(sessionStorage.getItem('audioInfo'))
+    if (localAudioInfo?.currentTrack) {
+      playerStore.setCurrentTrack(localAudioInfo.currentTrack)
+      playerStore.audioRef.src = localAudioInfo.currentTrack.track_file
+      playerStore.audioRef.currentTime = localAudioInfo.currentTime
+    }
+    console.log(playerStore.audioRef)
   }
 
   // Воспроизводим трек
@@ -23,6 +29,11 @@ export function useAudioPlayer() {
     try {
       playerStore.setCurrentTrack(track)
       playerStore.audioRef.src = track.track_file
+      sessionStorage.setItem('audioInfo', {
+        currentTrack: track,
+        currentTime: 0,
+      })
+
       await playerStore.audioRef.play()
       playerStore.setPlaying(true)
     } catch (error) {
@@ -39,6 +50,13 @@ export function useAudioPlayer() {
     if (duration) {
       const progress = (currentTime / duration) * 100
       playerStore.setProgress(progress)
+      sessionStorage.setItem(
+        'audioInfo',
+        JSON.stringify({
+          currentTrack: playerStore.currentTrack,
+          currentTime: currentTime,
+        }),
+      )
     }
   }
   // Перематываем
@@ -54,6 +72,13 @@ export function useAudioPlayer() {
     if (!playerStore.audioRef) return
     playerStore.audioRef.volume = playerStore.volume / 100
   }
+  watchEffect(() => {
+    if (playerStore.progress >= 100 && playerStore.isPlaying) {
+      playerStore.audioRef.currentTime = 0
+      playerStore.setProgress(0)
+      playerStore.setPlaying(false)
+    }
+  })
 
   return {
     initPlayer,

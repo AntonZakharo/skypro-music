@@ -8,18 +8,21 @@
           </svg>
         </div>
         <div class="track__title-text">
-          <a class="track__title-link" href="http://">{{ title }}</a>
+          <div class="track__title-link">{{ title }}</div>
         </div>
       </div>
       <div class="track__author">
-        <a class="track__author-link" href="http://">{{ author }}</a>
+        <div class="track__author-link">{{ author }}</div>
       </div>
       <div class="track__album">
-        <a class="track__album-link" href="http://">{{ album }}</a>
+        <div class="track__album-link">{{ album }}</div>
       </div>
       <div class="track__time">
-        <svg class="track__time-svg">
+        <svg class="track__time-svg" @click="likeTrack" v-if="!isLiked">
           <use xlink:href="@/assets/icons/sprite.svg#icon-like"></use>
+        </svg>
+        <svg class="track__time-svg_active" @click="dislikeTrack" v-if="isLiked">
+          <use xlink:href="@/assets/icons/sprite.svg#icon-dislike"></use>
         </svg>
         <span class="track__time-text">{{ formatDuration(duration) }}</span>
       </div>
@@ -32,6 +35,7 @@ const props = defineProps({
   author: String,
   album: String,
   duration: Number,
+  isLiked: Boolean,
   track: Object,
 })
 import { usePlayerStore } from '~/stores/usePlayerStore'
@@ -41,6 +45,15 @@ const playerStore = usePlayerStore()
 // eslint-disable-next-line no-undef
 const { formatDuration } = useTracks()
 const { playTrack } = useAudioPlayer()
+
+async function likeTrack() {
+  const response = await like(props.track._id)
+  props.track.isLiked = true
+}
+async function dislikeTrack() {
+  const response = await deleteLike(props.track._id)
+  props.track.isLiked = false
+}
 </script>
 <style scoped>
 .playlist__item {
@@ -156,8 +169,15 @@ const { playTrack } = useAudioPlayer()
   margin-right: 17px;
   fill: transparent;
   stroke: #696969;
+  cursor: pointer;
 }
-
+.track__time-svg_active {
+  width: 14px;
+  height: 12px;
+  margin-right: 17px;
+  fill: #b672ff;
+  cursor: pointer;
+}
 .track__time-text {
   font-style: normal;
   font-weight: 400;

@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <NuxtLayout name="default">
     <div class="centerblock__search search">
@@ -7,17 +6,24 @@
       </svg>
       <input class="search__text" type="search" placeholder="Поиск" name="search" />
     </div>
-    <h2 class="centerblock__h2">Треки</h2>
-    <FilterControls :tracks="tracks" :loading="loading" />
-    <BasePlaylist v-if="!loading" :tracks="tracks" />
+    <h2 class="centerblock__h2">Мои треки</h2>
+    <FilterControls :tracks="categoryTrackList" :loading="loading" />
+    <BasePlaylist v-if="!loading" :tracks="categoryTrackList" />
     <div v-if="error" class="error">{{ error }}</div>
     <div v-if="loading" class="loading">Загрузка треков...</div>
+    <div v-if="!categoryTrackList" class="empty">Вы не добавили ни одного трека</div>
   </NuxtLayout>
 </template>
 <script setup>
-// eslint-disable-next-line no-undef
-const { tracks, loading, error, fetchAllTracks } = useTracks()
-fetchAllTracks()
+const { loading, error, categoryTrackList, fetchFavoriteTracks } = useTracks()
+
+useHead({
+  title: 'Мои треки | Skypro.Music',
+})
+onMounted(() => {
+  const token = localStorage.getItem('access')
+  fetchFavoriteTracks(token)
+})
 </script>
 <style scoped lang="scss">
 .centerblock__search {
@@ -108,6 +114,9 @@ fetchAllTracks()
   justify-content: center;
 }
 .loading {
+  @extend .error;
+}
+.empty {
   @extend .error;
 }
 </style>

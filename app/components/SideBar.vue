@@ -1,36 +1,47 @@
 <template>
   <div class="main__sidebar sidebar">
     <div class="sidebar__personal">
-      <p class="sidebar__personal-name">Sergey.Ivanov</p>
-      <div class="sidebar__icon">
-        <RouterLink to="/auth">
+      <div class="sidebar__icon" v-if="refresh">
+        <NuxtLink to="/auth" @click="logout">
           <svg>
             <use xlink:href="@/assets/icons/sprite.svg#logout"></use>
           </svg>
-        </RouterLink>
+        </NuxtLink>
       </div>
     </div>
     <div class="sidebar__block">
       <div class="sidebar__list">
         <div class="sidebar__item">
-          <a class="sidebar__link" href="#">
+          <NuxtLink to="/category/2" class="sidebar__link">
             <img class="sidebar__img" src="@/assets/imgs/playlist01.png" alt="day's playlist" />
-          </a>
+          </NuxtLink>
         </div>
         <div class="sidebar__item">
-          <a class="sidebar__link" href="#">
+          <NuxtLink to="/category/3" class="sidebar__link">
             <img class="sidebar__img" src="@/assets/imgs/playlist02.png" alt="day's playlist" />
-          </a>
+          </NuxtLink>
         </div>
         <div class="sidebar__item">
-          <a class="sidebar__link" href="#">
+          <NuxtLink to="/category/4" class="sidebar__link">
             <img class="sidebar__img" src="@/assets/imgs/playlist03.png" alt="day's playlist" />
-          </a>
+          </NuxtLink>
         </div>
       </div>
     </div>
   </div>
 </template>
+<script setup>
+function logout() {
+  localStorage.removeItem('refresh')
+  const intervalId = localStorage.getItem('intervalId')
+  clearInterval(intervalId)
+}
+const refresh = ref()
+onMounted(() => {
+  refresh.value = localStorage.getItem('refresh')
+})
+</script>
+
 <style scoped>
 .main__sidebar {
   max-width: 418px;

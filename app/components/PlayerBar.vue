@@ -47,14 +47,16 @@
                 </svg>
               </div>
               <div class="track-play__author">
-                <a class="track-play__author-link" href="#">{{
-                  playerStore.currentTrack?.author || 'Выберите трек'
-                }}</a>
+                <div v-if="playerStore.currentTrack?.author">
+                  {{ playerStore.currentTrack?.author }}
+                </div>
+                <img v-if="!playerStore.currentTrack?.author" src="@/assets/icons/blank.svg" />
               </div>
               <div class="track-play__album">
-                <a class="track-play__album-link" href="#">{{
-                  playerStore.currentTrack?.album || ''
-                }}</a>
+                <div v-if="playerStore.currentTrack?.name">
+                  {{ playerStore.currentTrack?.name }}
+                </div>
+                <img v-if="!playerStore.currentTrack?.name" src="@/assets/icons/blank.svg" />
               </div>
             </div>
           </div>
@@ -81,7 +83,7 @@
         </div>
       </div>
     </div>
-    <audio ref="audioRef" @timeupdate="handleTimeUpdate" @ended="handleTrackEnd" />
+    <audio ref="audioRef" @timeupdate="handleTimeUpdate" />
   </div>
 </template>
 <script setup>
@@ -89,8 +91,8 @@ import { usePlayerStore } from '~/stores/usePlayerStore'
 import { useAudioPlayer } from '~/composables/useAudioPlayer'
 const playerStore = usePlayerStore()
 
-// eslint-disable-next-line no-undef
 const audioRef = ref(null)
+
 const { playTrack, handleTimeUpdate, seekTo, updateVolume, initPlayer } = useAudioPlayer()
 
 const handlePlay = () => {
@@ -126,7 +128,6 @@ const continueTrack = () => {
   playerStore.setPlaying(true)
   playerStore.audioRef.play()
 }
-// eslint-disable-next-line no-undef
 onMounted(() => {
   initPlayer(audioRef.value)
 })
@@ -369,9 +370,6 @@ onMounted(() => {
   grid-column: 2;
   grid-area: author;
   min-width: 49px;
-}
-
-.track-play__author-link {
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -385,9 +383,6 @@ onMounted(() => {
   grid-column: 2;
   grid-area: album;
   min-width: 49px;
-}
-
-.track-play__album-link {
   font-style: normal;
   font-weight: 400;
   font-size: 13px;

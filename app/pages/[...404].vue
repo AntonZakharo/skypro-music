@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <NuxtLayout name="default">
     <div class="centerblock__search search">
@@ -7,18 +6,20 @@
       </svg>
       <input class="search__text" type="search" placeholder="Поиск" name="search" />
     </div>
-    <h2 class="centerblock__h2">Треки</h2>
-    <FilterControls :tracks="tracks" :loading="loading" />
-    <BasePlaylist v-if="!loading" :tracks="tracks" />
-    <div v-if="error" class="error">{{ error }}</div>
-    <div v-if="loading" class="loading">Загрузка треков...</div>
+    <div class="error">
+      <h1 class="error__status">404</h1>
+      <h3 class="error__message">Страница не найдена 😭</h3>
+      <p class="error__message2">
+        Возможно, она была удалена <br />
+        или перенесена на другой адрес
+      </p>
+      <NuxtLink to="/">
+        <button class="error__button">Вернуться на главную</button>
+      </NuxtLink>
+    </div>
   </NuxtLayout>
 </template>
-<script setup>
-// eslint-disable-next-line no-undef
-const { tracks, loading, error, fetchAllTracks } = useTracks()
-fetchAllTracks()
-</script>
+
 <style scoped lang="scss">
 .centerblock__search {
   width: 100%;
@@ -93,21 +94,49 @@ fetchAllTracks()
   font-size: 16px;
   line-height: 24px;
 }
-
-.centerblock__h2 {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 64px;
-  line-height: 72px;
-  letter-spacing: -0.8px;
-  margin-bottom: 45px;
-}
 .error {
   display: flex;
-  width: 100%;
+  align-items: center;
   justify-content: center;
-}
-.loading {
-  @extend .error;
+  flex-direction: column;
+  height: 80%;
+  &__status {
+    font-weight: 400;
+    font-size: 160px;
+    line-height: 168px;
+  }
+  &__message {
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 40px;
+    margin-bottom: 8px;
+  }
+  &__message2 {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: -0.3%;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  &__button {
+    background-color: #580ea2;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: -0.3%;
+    padding: 12px 46px;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    transition: 0.3s;
+    &:hover {
+      background-color: #3f007d;
+    }
+    &:active {
+      background-color: #271a58;
+    }
+  }
 }
 </style>
